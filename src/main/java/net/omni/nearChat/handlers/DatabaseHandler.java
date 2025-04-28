@@ -6,6 +6,10 @@ public class DatabaseHandler {
 
     }
 
-    // getters setters
-    // everything must run asynchronously
+    /*
+     getters setters
+     everything must run asynchronously
+
+    */
+
 }

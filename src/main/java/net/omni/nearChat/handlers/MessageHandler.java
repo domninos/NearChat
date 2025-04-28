@@ -1,7 +1,7 @@
 package net.omni.nearChat.handlers;
 
-import net.omni.nearChat.util.NearChatConfig;
 import net.omni.nearChat.NearChatPlugin;
+import net.omni.nearChat.util.NearChatConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -41,6 +41,10 @@ public class MessageHandler {
 
         plugin.sendConsole("&aLoaded config.yml");
 
+    }
+
+    public void saveToConfig() {
+        // TODO: save childToMessage to messages.yml
     }
 
     public String getPlayersOnly() {

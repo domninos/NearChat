@@ -15,10 +15,12 @@ public final class NearChatPlugin extends JavaPlugin {
 
     private MessageHandler messageHandler;
     private NearChatConfig nearConfig;
+    private NearChatConfig messageConfig;
 
     @Override
     public void onEnable() {
         this.nearConfig = new NearChatConfig(this, "config.yml");
+        this.messageConfig = new NearChatConfig(this, "messages.yml");
 
         this.messageHandler = new MessageHandler(this);
 
@@ -36,8 +38,14 @@ public final class NearChatPlugin extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
 
-        messageHandler.flush();
+        // TODO: configHandler.saveToConfig()
+//        messageHandler.saveToConfig();
 
+        nearConfig.save();
+        messageConfig.save();
+
+
+        messageHandler.flush();
 
         sendConsole("&cSuccessfully disabled "
                 + getDescription().getFullName() + " [" + getDescription().getAPIVersion() + "]");
