@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation("io.lettuce:lettuce-core:6.3.2.RELEASE")
     compileOnly("org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT")
 }
 
@@ -28,6 +29,27 @@ tasks {
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21")
+    }
+}
+
+compileJava {
+    options.compilerArgs << "-s"
+    options.compilerArgs << ("$projectDir/generated/java" as String)
+
+    doFirst {
+        file(new File(projectDir, "/generated/java")).mkdirs()
+    }
+}
+
+clean.doLast {
+    file(new File(projectDir, "/generated")).deleteDir()
+}
+
+sourceSets {
+    generated {
+        java {
+            srcDir "$projectDir/generated/java"
+        }
     }
 }
 
@@ -54,6 +76,12 @@ processResources {
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
+        expand props
+    }
+    filesMatching('config.yml') {
+        expand props
+    }
+    filesMatching('messages.yml') {
         expand props
     }
 }

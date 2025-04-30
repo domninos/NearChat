@@ -14,10 +14,18 @@ public class NearChatConfig {
     private FileConfiguration config;
 
     public NearChatConfig(NearChatPlugin plugin, String fileName) {
-        this(plugin, fileName, plugin.getDataFolder());
+        this(plugin, fileName, plugin.getDataFolder(), false);
+    }
+
+    public NearChatConfig(NearChatPlugin plugin, String fileName, boolean res) {
+        this(plugin, fileName, plugin.getDataFolder(), res);
     }
 
     public NearChatConfig(NearChatPlugin plugin, String fileName, File directory) {
+        this(plugin, fileName, directory, false);
+    }
+
+    public NearChatConfig(NearChatPlugin plugin, String fileName, File directory, boolean res) {
         this.plugin = plugin;
 
         if (!fileName.endsWith(".yml"))
@@ -26,12 +34,8 @@ public class NearChatConfig {
         this.file = new File(directory, fileName);
 
         if (!file.exists()) {
-            try {
-                if (file.createNewFile())
-                    plugin.sendConsole("&aSuccessfully created " + fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            plugin.saveResource(fileName, false); // TODO: test
+            plugin.sendConsole("&aSuccessfully created " + fileName);
         }
 
         reload();
@@ -62,6 +66,14 @@ public class NearChatConfig {
 
     public String getString(String path) {
         return config.getString(path);
+    }
+
+    public int getInt(String path) {
+        return config.getInt(path);
+    }
+
+    public boolean getBool(String path) {
+        return config.getBoolean(path);
     }
 
     public void reload() {

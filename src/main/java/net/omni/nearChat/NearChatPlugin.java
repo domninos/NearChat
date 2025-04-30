@@ -1,6 +1,7 @@
 package net.omni.nearChat;
 
 import net.omni.nearChat.commands.NearChatCommand;
+import net.omni.nearChat.handlers.DatabaseHandler;
 import net.omni.nearChat.handlers.MessageHandler;
 import net.omni.nearChat.util.NearChatConfig;
 import org.bukkit.Bukkit;
@@ -16,14 +17,17 @@ public final class NearChatPlugin extends JavaPlugin {
     private MessageHandler messageHandler;
     private NearChatConfig nearConfig;
     private NearChatConfig messageConfig;
+    private DatabaseHandler databaseHandler;
 
     @Override
     public void onEnable() {
-        this.nearConfig = new NearChatConfig(this, "config.yml");
-        this.messageConfig = new NearChatConfig(this, "messages.yml");
+        this.nearConfig = new NearChatConfig(this, "config.yml", true);
+        this.messageConfig = new NearChatConfig(this, "messages.yml", true);
 
+        this.databaseHandler = new DatabaseHandler(this);
         this.messageHandler = new MessageHandler(this);
 
+        databaseHandler.initDatabase();
         messageHandler.load();
         // Plugin startup logic
 
@@ -47,13 +51,19 @@ public final class NearChatPlugin extends JavaPlugin {
 
         messageHandler.flush();
 
+        databaseHandler.closeDatabase();
+
         sendConsole("&cSuccessfully disabled "
                 + getDescription().getFullName() + " [" + getDescription().getAPIVersion() + "]");
     }
 
+    public void error(String text) {
+        getLogger().log(Level.SEVERE, "ERROR! Something went wrong: " + text);
+    }
+
     public void error(Exception e) {
         getLogger().log(Level.SEVERE, "Error saving file: " + Arrays.toString(e.getStackTrace()));
-        sendConsole("&cERROR! Something went wrong saving config: " + e.getMessage());
+        sendConsole("&cERROR! Something went wrong: " + e.getMessage());
     }
 
     public void sendConsole(String text) {
